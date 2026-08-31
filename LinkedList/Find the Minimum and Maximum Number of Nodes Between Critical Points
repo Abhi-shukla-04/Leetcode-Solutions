@@ -1,3 +1,4 @@
+
 var nodesBetweenCriticalPoints = function(head) {
     let prev = head;
     let curr = head.next;
@@ -7,20 +8,17 @@ var nodesBetweenCriticalPoints = function(head) {
     let minDist = Infinity;
     let pos = 1;
 
-    while (curr && curr.next) {
-        let next = curr.next;
+    while (curr !== null && curr.next !== null) {
+        const next = curr.next;
 
-        // Check if current node is a critical point
         const isCritical =
             (curr.val > prev.val && curr.val > next.val) ||
             (curr.val < prev.val && curr.val < next.val);
 
         if (isCritical) {
             if (first === -1) {
-                // First critical point
                 first = pos;
             } else {
-                // Distance from previous critical point
                 minDist = Math.min(minDist, pos - last);
             }
 
@@ -32,13 +30,10 @@ var nodesBetweenCriticalPoints = function(head) {
         pos++;
     }
 
-    // Fewer than two critical points
-    if (first === last) {
+    // Less than 2 critical points
+    if (first === -1 || first === last) {
         return [-1, -1];
     }
 
-    // Distance between first and last critical points
-    const maxDist = last - first;
-
-    return [minDist, maxDist];
+    return [minDist, last - first];
 };
