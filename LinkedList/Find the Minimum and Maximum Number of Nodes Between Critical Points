@@ -1,0 +1,44 @@
+var nodesBetweenCriticalPoints = function(head) {
+    let prev = head;
+    let curr = head.next;
+
+    let first = -1;
+    let last = -1;
+    let minDist = Infinity;
+    let pos = 1;
+
+    while (curr && curr.next) {
+        let next = curr.next;
+
+        // Check if current node is a critical point
+        const isCritical =
+            (curr.val > prev.val && curr.val > next.val) ||
+            (curr.val < prev.val && curr.val < next.val);
+
+        if (isCritical) {
+            if (first === -1) {
+                // First critical point
+                first = pos;
+            } else {
+                // Distance from previous critical point
+                minDist = Math.min(minDist, pos - last);
+            }
+
+            last = pos;
+        }
+
+        prev = curr;
+        curr = next;
+        pos++;
+    }
+
+    // Fewer than two critical points
+    if (first === last) {
+        return [-1, -1];
+    }
+
+    // Distance between first and last critical points
+    const maxDist = last - first;
+
+    return [minDist, maxDist];
+};
