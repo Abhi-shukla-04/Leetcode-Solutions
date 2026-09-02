@@ -1,0 +1,49 @@
+/**
+ * @param {number[]} piles
+ * @return {number}
+ */
+var stoneGameII = function(piles) {
+    const n = piles.length;
+
+    // suffix[i] = total stones from i to n-1
+    const suffix = new Array(n + 1).fill(0);
+
+    for (let i = n - 1; i >= 0; i--) {
+        suffix[i] = suffix[i + 1] + piles[i];
+    }
+
+    const memo = new Map();
+
+    function dp(i, M) {
+        // All piles have been taken
+        if (i >= n) {
+            return 0;
+        }
+
+        const key = `${i},${M}`;
+
+        if (memo.has(key)) {
+            return memo.get(key);
+        }
+
+        let best = 0;
+
+        // Take X piles, where X <= 2M
+        for (let X = 1; X <= 2 * M && i + X <= n; X++) {
+
+            const newM = Math.max(M, X);
+
+            // Current player's stones
+            const current =
+                suffix[i] - dp(i + X, newM);
+
+            best = Math.max(best, current);
+        }
+
+        memo.set(key, best);
+
+        return best;
+    }
+
+    return dp(0, 1);
+};
